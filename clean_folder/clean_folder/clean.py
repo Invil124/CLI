@@ -5,21 +5,7 @@ import zipfile
 import sys
 
 
-
-
-
 def main():
-    
-    if len(sys.argv) < 2:
-        print('Enter path to folder which should be cleaned')
-        exit()
-    path = sys.argv[1]
-    if not (os.path.exists(path) and pathlib.Path(path).is_dir()):
-        path('Path incorrect')
-        exit()
-    p = pathlib.Path(path)
-
-
     def sort_files(path):
         images = list()
         video = list()
@@ -34,24 +20,24 @@ def main():
         def parse_folder(path):
             for object in path.iterdir():
                 if object.is_file():
-                    name = object.name.split(".")
-                    if name[-1] in ["png","jpg","jpeg","svg"]:
+                    name = object.name.endswith
+                    if name("png") or name("jpg") or name("jpeg") or name("jpeg"):
                         images.append(object)
                         if object.suffix not in expansion:
                             expansion.append(object.suffix)
-                    elif name[-1] in ["avi","mp4","mov","mkv"] :
+                    elif name("avi") or name("mp4") or name("mov") or name("mkv"):
                         video.append(object)
                         if object.suffix not in expansion:
                             expansion.append(object.suffix)
-                    elif name[-1] in ["doc","docx","txt","pdf","xlsx","pptx"]:  
+                    elif name("doc") or name("docx") or name("txt") or name("pdf") or name("xlsx") or name("pptx"):  
                         docs.append(object)
                         if object.suffix not in expansion:
                             expansion.append(object.suffix)
-                    elif name[-1] in ["mp3","ogg","wav","amr"]:
+                    elif name("mp3") or name("ogg") or name("wav") or name("amr"):
                         musick.append(object)
                         if object.suffix not in expansion:
                             expansion.append(object)
-                    elif name[-1] in ["zip","gz","tar"]:
+                    elif name("zip") or name("gz") or name("tar"):
                         archive.append(object)
                         if object.suffix not in expansion:
                             expansion.append(object)
@@ -61,7 +47,9 @@ def main():
                             expansion_unknown.append(object.suffix)
                 elif object.is_dir():
                     name_folder = object.name
-                    if name_folder not in ("documents","images","audio","video","archives"):
+                    if name_folder == "documents" or name_folder == "images" or name_folder == "audio" or name_folder == "video" or name_folder == "archives":
+                        continue
+                    else:
                         
                         folders.append(object)
                         parse_folder(object)
@@ -141,8 +129,16 @@ def main():
             if len(os.listdir(folder)) == 0:
                 os.rmdir(folder)
 
- 
-
+    
+    if len(sys.argv) < 2:
+        print('Enter path to folder which should be cleaned')
+        exit()
+    path = sys.argv[1]
+    if not (os.path.exists(path) and pathlib.Path(path).is_dir()):
+        path('Path incorrect')
+        exit()
+    p = pathlib.Path(path)
+    print(f"Start in {p} ")
     documents = os.path.join(p,"documents")
     if not os.path.exists(documents):
         os.mkdir(documents)
@@ -163,7 +159,8 @@ def main():
     archives = os.path.join(p,"archives")
     if not os.path.exists(archives):
         os.mkdir(archives)
-
+    
+    
 
     list_sorted_files = sort_files(p)
 
@@ -174,7 +171,7 @@ def main():
 
 
 if __name__ == '__main__':
-    exit(main())
+    main()
 
 
 
