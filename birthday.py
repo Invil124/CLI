@@ -1,11 +1,7 @@
 import calendar
 import datetime
 
-test_list_users = [
-    {"Adrey":datetime.date(1979,9,24)},
-    {"Prikolist":datetime.date(1999,9,25)},
-    {"Dryg_prekolist":datetime.date(985,9,28)},
-    {"Adren23":datetime.date(2000,9,27)}]
+
 
 
 def get_birthday_per_week(users):
@@ -60,4 +56,3 @@ def get_birthday_per_week(users):
 
                 
 
-get_birthday_per_week(test_list_users)
