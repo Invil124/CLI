@@ -29,8 +29,8 @@ class Record:
         self.phones.pop(index_oldphone)
         self.phones.append(new_phone)
 
-    def delite_phone(self):
-        self.phones.clear()
+    def delite_phone(self,phone_index):
+        self.phones.pop(phone_index)
 
     
 CONNTACTS = AddressBook() # Екземпляр класу AdressBook
@@ -109,16 +109,24 @@ def  add_num_func(*args): # додає ще один норер до конта�
     conntact = args[0]
     name = conntact[0].lower()
     new_phone = Phone(conntact[1].replace("+",""))
+
     record = CONNTACTS.data[name]
     record.add_phone(new_phone)
+    
     return "New phone add"
     
 @error_func
 def del_num_func(*args): # видаляє телефонні номери
     conntact = args[0]
     name = conntact[0].lower()
+    old_phone = conntact[1].replace("+","")
+
     record = CONNTACTS.data[name]
-    record.delite_phone()
+
+    phone_numbers = list(map(lambda x : x.value, record.phones))
+    index = phone_numbers.index(old_phone) # знаходимо індекс старого телефону в списку
+    record.delite_phone(index) # змінюємо телефон за допомогою індексу 
+    
     return "Phones sucesfully delete"
     
 
