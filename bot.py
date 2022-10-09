@@ -25,8 +25,8 @@ class Record:
     def add_phone(self,new_phone):
         self.phones.append(new_phone)
 
-    def change_phone(self,new_phone):
-        self.phones.clear()
+    def change_phone(self,index_oldphone,new_phone):
+        self.phones.pop(index_oldphone)
         self.phones.append(new_phone)
 
     def delite_phone(self):
@@ -40,40 +40,45 @@ def error_func(handler):
         try:
             return handler(*args, **kwargs)
         except IndexError as error_int:
-            print("Give me name and phone please")
+            return "Give me name and phone please"
         except KeyError as er:
-            print("Wrong name try aggain")
+            return "Wrong name try aggain"
+        except TypeError:
+            return "Wrong commands type"
+        except ValueError as e:
+            return e.args[0]
+        except Exception as e:
+            return e.args
     return wrapper
 
 def greet_func(*args):
-    return print("How can I help you?")
+    return "How can I help you?"
 
 def show_func(*args):
+    show_names = list()
     for name, record in CONNTACTS.data.items():
         name = name.title()
-        phone = list(map(lambda x : x.value, record.phones)) # це потрібно, бо атрибут phones в класі Records це список з екземплярів класу Phone 
-        print(f"{name}: {phone}")
+        phone = ", ".join(list(map(lambda x : x.value, record.phones))) # це потрібно, бо атрибут phones в класі Records це список з екземплярів класу Phone 
+        show_names.append(f"{name}: {phone}\n")
+    return show_names
         
 @error_func
 def change_func(*args):
     contact = args[0] 
 
-    if len(contact) < 2:
-        return print("Inpunt current name and new phone:")
-
     name = Name(contact[0].lower())
-    new_phone = Phone(contact[1].replace("+",""))
-
-    if name.value not in CONNTACTS.data:
-        return print("Current name not find.")
+    old_phone = contact[1].replace("+","")
+    new_phone = Phone(contact[2].replace("+",""))
 
     if not (new_phone.value.isdigit() and (13 >= len(new_phone.value) >=9)):
-        return print("Invalid phone number.Try again.")    
+        return "Invalid phone number.Try again."    
     
     record = CONNTACTS.data[name.value]
-    record.change_phone(new_phone)
+    phone_numbers = list(map(lambda x : x.value, record.phones))
+    index = phone_numbers.index(old_phone) # знаходимо індекс старого телефону в списку
+    record.change_phone(index,new_phone) # змінюємо телефон за допомогою індексу 
 
-    print("Phone successfully changed")
+    return "Phone successfully changed"
 
 @error_func
 def add_func(*args):
@@ -82,22 +87,22 @@ def add_func(*args):
     phone = Phone(contact[1].replace("+",""))
 
     if not (phone.value.isdigit() and (13 >= len(phone.value) >=9)):
-        return print("Invalid phone number.Try again.")
+        return "Invalid phone number.Try again."
 
     record = Record(name,phone)
-    CONNTACTS.add_record(record)
-    print("Phone add sucesfully")
+    CONNTACTS.add_record(record) # додає до CONTACTS(екземпляр AdressBook) екземпляри класу Records
+    return "Phone add sucesfully"
 
 @error_func
 def phone_func(*args):
     contact = args[0]
     name = contact[0].lower()
     record = CONNTACTS.data[name]
-    print (f"{list(map(lambda x : x.value, record.phones))}")
+    phones = ", ".join(list(map(lambda x : x.value, record.phones)))
+    return (f"{phones}")
    
 def quit_func(*args):
-    print("Good bye!")
-    return quit()
+    return "Good bye!"
 
 @error_func
 def  add_num_func(*args): # додає ще один норер до контакту
@@ -106,7 +111,7 @@ def  add_num_func(*args): # додає ще один норер до конта�
     new_phone = Phone(conntact[1].replace("+",""))
     record = CONNTACTS.data[name]
     record.add_phone(new_phone)
-    print("New phone add")
+    return "New phone add"
     
 @error_func
 def del_num_func(*args): # видаляє телефонні номери
@@ -114,7 +119,7 @@ def del_num_func(*args): # видаляє телефонні номери
     name = conntact[0].lower()
     record = CONNTACTS.data[name]
     record.delite_phone()
-    print("Phone sucesfully delete")
+    return "Phones sucesfully delete"
     
 
 @error_func
@@ -135,8 +140,8 @@ def entered_command(command):
         "delete_number": del_num_func} # нова функція 
     
     if command[0] not in COMANDS:
-        return print("Command not found")
-    COMANDS[command[0]](command[1:])
+        return "Command not found"
+    return COMANDS[command[0]](command[1:])
 
 
 
@@ -144,7 +149,16 @@ def main():
 
     while True:
         command = input("Enter command: ")
-        entered_command(command)
+        output = entered_command(command)
+        if not type(output) == type(list()): # з усіх функцій список повертається тільки з однієї.
+            print(output)
+        else:
+            for contact in output:
+                print(contact) 
+       
+
+        if output == "Good bye!":
+            break
         
 
 if __name__ == "__main__":
