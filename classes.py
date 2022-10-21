@@ -14,18 +14,16 @@ class AddressBook(UserDict):
             yield show_names[counter]
             counter +=1 
 
-class Field:
-    pass
+class Field():
+    def __init__(self,value):
+        self.value = value
 
 class Name(Field):
-    def __init__(self,name):
-        self.value = name.lower()
+    __name = None
 
 class Phone(Field):
-    def __init__(self,phone):
-        self.__value = None
-        self.value = phone
-
+    __value = None
+    
     @property
     def value(self):
         return self.__value
@@ -38,10 +36,7 @@ class Phone(Field):
         self.__value = phone
 
 class Birthday(Field): # Новий клас BIRTHDAY
-    def __init__(self,birthday):
-        self.__value = None
-        self.value = birthday
-
+    __value = None
 
     @property
     def value(self):
@@ -54,7 +49,7 @@ class Birthday(Field): # Новий клас BIRTHDAY
         match = re.search(patern,birthday)
 
         if not match:
-            raise Exception("input DATE.MONTH")
+            raise ValueError("input DATE.MONTH")
 
         birthday = datetime.strptime(birthday,"%d.%m")
         birthday = birthday.replace(year=datetime.now().year)

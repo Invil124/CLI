@@ -25,7 +25,7 @@ def greet_func(*args):
 def show_func(*args):
     show_names = list()
     for name, record in CONNTACTS.data.items():
-        name = name.title()
+        name = name
         phone = ", ".join(list(map(lambda x : x.value, record.phones))) # це потрібно, бо атрибут phones в класі Records це список з екземплярів класу Phone 
         show_names.append(f"{name}: {phone}\n")
     return show_names
@@ -34,7 +34,7 @@ def show_func(*args):
 def change_func(*args):
     contact = args[0] 
 
-    name = Name(contact[0].lower())
+    name = Name(contact[0])
     old_phone = contact[1].replace("+","")
     new_phone = Phone(contact[2].replace("+",""))
   
@@ -56,7 +56,7 @@ def add_record_func(*args):
 @error_func
 def phone_func(*args): #показує телефони контакту
     contact = args[0]
-    name = contact[0].lower()
+    name = contact[0]
     record = CONNTACTS.data[name]
     phones = ", ".join(list(map(lambda x : x.value, record.phones)))
     return (f"{phones}")
@@ -67,7 +67,7 @@ def quit_func(*args):
 @error_func
 def  add_num_func(*args): # додає ще один норер до контакту
     conntact = args[0]
-    name = conntact[0].lower()
+    name = conntact[0]
     new_phone = Phone(conntact[1].replace("+",""))
 
     record = CONNTACTS.data[name]
@@ -78,7 +78,7 @@ def  add_num_func(*args): # додає ще один норер до конта�
 @error_func
 def del_num_func(*args): # видаляє телефонні номери
     conntact = args[0]
-    name = conntact[0].lower()
+    name = conntact[0]
     old_phone = conntact[1].replace("+","")
 
     record = CONNTACTS.data[name]
@@ -91,14 +91,14 @@ def del_num_func(*args): # видаляє телефонні номери
     
 def day_to_birthday_func(*args): #рахує дні до дня народження
     conntact = args[0]
-    name = conntact[0].lower()
+    name = conntact[0]
     record = CONNTACTS.data[name]
     return record.days_to_birthday
 
 
 def add_birthday_func(*args): #довзволяє доадти існуючому контакту день народження 
     conntact = args[0]
-    name = conntact[0].lower()
+    name = conntact[0]
     record = CONNTACTS.data[name]
     record.add_birthday(conntact[1])
     return "Birthday sucesfully add"
