@@ -1,4 +1,3 @@
-from ast import pattern
 from collections import UserDict
 from datetime import datetime
 import re
@@ -10,7 +9,9 @@ class AddressBook(UserDict):
     def itrerator(self): # ITERATOR
         counter = 0
         show_names = list(self.data.values())
-        while counter <= len(show_names):
+
+        while counter <= len(show_names)-1:
+            
             yield show_names[counter]
             counter +=1 
 

@@ -1,36 +1,25 @@
 
-from classes import AddressBook, Birthday,Name,Phone,Record
+from classes import Name,Phone,Record
+from help_func import error_func, load_contacts, save_contacts, make_string_phones
 
-CONNTACTS = AddressBook() # Екземпляр класу AdressBook
+CONNTACTS = load_contacts() # загружає список контактів, якщо його немає то створює пустий
 
-def error_func(handler):
-    def wrapper(*args, **kwargs):
-        try:
-            return handler(*args, **kwargs)
-        except IndexError as error_int:
-            return "Give me name and phone please"
-        except KeyError as er:
-            return "Wrong name try aggain"
-        except TypeError:
-            return "Wrong commands type"
-        except ValueError as e:
-            return e.args[0]
-        except Exception as e:
-            return e.args
-    return wrapper
 
-def greet_func(*args):
+def greet_func(*args): #вітання 
     return "How can I help you?"
+
+def quit_func(*args): # функція зберігає данні і виходить з боту.
+    save_contacts(CONNTACTS)
+    return "Good bye!"
 
 def show_func(*args):
     show_names = list()
     for name, record in CONNTACTS.data.items():
         name = name
-        phone = ", ".join(list(map(lambda x : x.value, record.phones))) # це потрібно, бо атрибут phones в класі Records це список з екземплярів класу Phone 
-        show_names.append(f"{name}: {phone}\n")
+        phone = make_string_phones(record) # це потрібно, бо атрибут phones в класі Records це список з екземплярів класу Phone 
+        show_names.append(f"{name}: {phone}")
     return show_names
         
-@error_func
 def change_func(*args):
     contact = args[0] 
 
@@ -45,26 +34,19 @@ def change_func(*args):
 
     return "Phone successfully changed"
 
-@error_func
 def add_record_func(*args):
     contact = args[0] 
-    
     record = Record(*contact)
     CONNTACTS.add_record(record) # додає до CONTACTS(екземпляр AdressBook) екземпляри класу Records
     return "Record add sucesfully"
 
-@error_func
 def phone_func(*args): #показує телефони контакту
     contact = args[0]
     name = contact[0]
     record = CONNTACTS.data[name]
-    phones = ", ".join(list(map(lambda x : x.value, record.phones)))
+    phones = make_string_phones(record)
     return (f"{phones}")
    
-def quit_func(*args):
-    return "Good bye!"
-
-@error_func
 def  add_num_func(*args): # додає ще один норер до контакту
     conntact = args[0]
     name = conntact[0]
@@ -75,7 +57,6 @@ def  add_num_func(*args): # додає ще один норер до конта�
     
     return "New phone add"
     
-@error_func
 def del_num_func(*args): # видаляє телефонні номери
     conntact = args[0]
     name = conntact[0]
@@ -95,7 +76,6 @@ def day_to_birthday_func(*args): #рахує дні до дня народжен
     record = CONNTACTS.data[name]
     return record.days_to_birthday
 
-
 def add_birthday_func(*args): #довзволяє доадти існуючому контакту день народження 
     conntact = args[0]
     name = conntact[0]
@@ -111,19 +91,29 @@ def iter_concntact(max_iters): # AddressBook реалізує метод iterato
     for record in generator:
         counter += 1
         name = record.name.value
-        phones = ", ".join(list(map(lambda x : x.value, record.phones)))
+        phones = make_string_phones(record)
         show_names.append(f"{name}: {phones}")
         if counter >= max_iters:
             break
     return show_names
     
+def find_contact(*args): # функція яка знаходить контакт 
+    search_inputr = args[0][0]
+    generator = CONNTACTS.itrerator()
+    search_result = list()
+    for record in generator:
+        phones = make_string_phones(record)
+        string = f"{record.name.value} {phones}"
+        if search_inputr in string:
+            search_result.append(string)
+    return search_result
 
 @error_func
 def entered_command(command):
     
     command = command.strip().split(" ")
 
-    COMANDS = {
+    commands = {
         "exit":quit_func,
         "good":quit_func,
         "close":quit_func,
@@ -136,8 +126,9 @@ def entered_command(command):
         "delete_number": del_num_func,
         "add_birthday": add_birthday_func,
         "birthday":day_to_birthday_func,
-        "iter_contact":iter_concntact} 
+        "iter_contact":iter_concntact,
+        "find":find_contact} 
     
-    if command[0] not in COMANDS:
+    if command[0] not in commands:
         return "Command not found"
-    return COMANDS[command[0]](command[1:])
+    return commands[command[0]](command[1:])
