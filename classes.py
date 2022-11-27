@@ -2,8 +2,9 @@ from collections import UserDict
 from datetime import datetime
 import re
 
+
 class AddressBook(UserDict):
-    def add_record(self,record):
+    def add_record(self, record):
         self.data[record.name.value] = record
     
     def itrerator(self): # ITERATOR
@@ -15,12 +16,15 @@ class AddressBook(UserDict):
             yield show_names[counter]
             counter +=1 
 
+
 class Field():
-    def __init__(self,value):
+    def __init__(self, value):
         self.value = value
+
 
 class Name(Field):
     __name = None
+
 
 class Phone(Field):
     __value = None
@@ -35,6 +39,7 @@ class Phone(Field):
             raise Exception("Invalid phone number.Try again.") 
         
         self.__value = phone
+
 
 class Birthday(Field): # Новий клас BIRTHDAY
     __value = None
@@ -59,7 +64,7 @@ class Birthday(Field): # Новий клас BIRTHDAY
         
 class Record:
     
-    def __init__(self,name,phone = None,birthday = None):
+    def __init__(self, name, phone=None, birthday=None):
         self.phones = list()
         self.name = Name(name)
 
@@ -75,7 +80,7 @@ class Record:
     def add_birthday(self,date):
         self.birthday = Birthday(date)
 
-    def change_phone(self,index_oldphone,new_phone):
+    def change_phone(self, index_oldphone, new_phone):
         self.phones.pop(index_oldphone)
         self.phones.append(new_phone)
     
@@ -86,9 +91,8 @@ class Record:
         if current_datetime > birthday:
             birthday = birthday.replace(year=datetime.now().year + 1)
     
-        differenc = birthday - current_datetime
-        return f"{differenc.days} days left."
-    
+        difference = birthday - current_datetime
+        return f"{difference.days} days left."
 
     def delite_phone(self,phone_index):
         self.phones.pop(phone_index)
