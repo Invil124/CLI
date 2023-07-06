@@ -33,7 +33,7 @@ class Phone(Field):
     def value(self):
         return self.__value
 
-    @value.setter # перевірка на корекність
+    @value.setter 
     def value(self,phone):
         if not (phone.isdigit() and (13 >= len(phone) >=9)):
             raise Exception("Invalid phone number.Try again.") 
@@ -41,14 +41,14 @@ class Phone(Field):
         self.__value = phone
 
 
-class Birthday(Field): # Новий клас BIRTHDAY
+class Birthday(Field): 
     __value = None
 
     @property
     def value(self):
         return self.__value
 
-    @value.setter  # перевірка на корекність
+    @value.setter 
     def value(self,birthday):
 
         patern = r"[0,1,2,3]\d\.[1][0,1,2]|[0,1,2,3]\d\.[0]\d"
