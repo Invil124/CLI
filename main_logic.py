@@ -6,11 +6,11 @@ from output_logic import TypeStr
 CONNTACTS = load_contacts() # загружає список контактів, якщо його немає то створює пустий
 
 
-def greet_func(*args): #вітання 
+def greet_func(*args): 
     return "How can I help you?", TypeStr.REQUEST
 
 
-def quit_func(*args): # функція зберігає данні і виходить з боту.
+def quit_func(*args): 
     save_contacts(CONNTACTS)
     return "Good bye!", TypeStr.REQUEST
 
@@ -46,7 +46,7 @@ def add_record_func(*args):
     return "Record add sucesfully", TypeStr.LOG
 
 
-def phone_func(*args): #показує телефони контакту
+def phone_func(*args): 
     contact = args[0]
     name = contact[0]
     record = CONNTACTS.data[name]
@@ -54,7 +54,7 @@ def phone_func(*args): #показує телефони контакту
     return (f"{phones}"), TypeStr.REQUEST
 
 
-def  add_num_func(*args): # додає ще один норер до контакту
+def  add_num_func(*args): 
     conntact = args[0]
     name = conntact[0]
     new_phone = Phone(conntact[1].replace("+",""))
@@ -65,7 +65,7 @@ def  add_num_func(*args): # додає ще один норер до конта�
     return "New phone add", TypeStr.LOG
 
 
-def del_num_func(*args): # видаляє телефонні номери
+def del_num_func(*args):
     conntact = args[0]
     name = conntact[0]
     old_phone = conntact[1].replace("+","")
@@ -79,14 +79,14 @@ def del_num_func(*args): # видаляє телефонні номери
     return "Phones sucesfully delete", TypeStr.LOG
 
 
-def day_to_birthday_func(*args): #рахує дні до дня народження
+def day_to_birthday_func(*args): 
     conntact = args[0]
     name = conntact[0]
     record = CONNTACTS.data[name]
     return record.days_to_birthday, TypeStr.REQUEST
 
 
-def add_birthday_func(*args): #довзволяє доадти існуючому контакту день народження 
+def add_birthday_func(*args):
     conntact = args[0]
     name = conntact[0]
     record = CONNTACTS.data[name]
@@ -94,7 +94,7 @@ def add_birthday_func(*args): #довзволяє доадти існуючом�
     return "Birthday successfully add", TypeStr.LOG
 
 
-def iter_concntact(max_iters): # AddressBook реалізує метод iterator, який повертає генератор за записами AddressBook і за одну ітерацію повертає уявлення для N записів.
+def iter_concntact(max_iters): 
     counter = 0
     max_iters = int(max_iters[0])
     generator = CONNTACTS.itrerator()
@@ -109,7 +109,7 @@ def iter_concntact(max_iters): # AddressBook реалізує метод iterato
     return show_names, TypeStr.REQUEST
 
 
-def find_contact(*args): # функція яка знаходить контакт 
+def find_contact(*args):  
     search_inputr = args[0][0]
     generator = CONNTACTS.itrerator()
     search_result = dict()
